@@ -11,7 +11,9 @@
     "poweredBy": "a j2e demo",
     "actions": {
       "videoList": "see video list",
-      "record": "record a video"
+      "record": "record a video",
+      "stopRecording": "stop recording",
+      "processing": "processing"
     }
   },
   "videoListScreen": {

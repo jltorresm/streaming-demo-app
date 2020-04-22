@@ -2,7 +2,7 @@ import * as React from "react"
 import {View, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView} from "react-native"
 import {ParamListBase} from "@react-navigation/native"
 import {NativeStackNavigationProp} from "react-native-screens/native-stack"
-import {Button, Header, Screen, Text, Wallpaper} from "../../components"
+import {Button, Header, Screen, Text, Wallpaper, Record} from "../../components"
 import {color, spacing} from "../../theme"
 
 const demoLogo = require("./awesome.png")
@@ -20,7 +20,7 @@ const HEADER_TITLE: TextStyle = {
     letterSpacing: 1.5,
 }
 const TITLE: TextStyle = {...TEXT, ...BOLD, fontSize: 28, lineHeight: 38, textAlign: "center"}
-const LOGO: ImageStyle = {alignSelf: "center", maxWidth: "90%", resizeMode: "contain"}
+const LOGO: ImageStyle = {alignSelf: "center", maxHeight: 150, resizeMode: "contain"}
 const CONTENT: TextStyle = {
     ...TEXT,
     color: "#BAB6C8",
@@ -33,6 +33,8 @@ const BUTTON: ViewStyle = {paddingVertical: spacing[4], paddingHorizontal: spaci
 const BUTTON_TEXT: TextStyle = {...TEXT, ...BOLD, fontSize: 13, letterSpacing: 2, textTransform: "uppercase"}
 const FOOTER: ViewStyle = {backgroundColor: "#20162D"}
 const FOOTER_CONTENT: ViewStyle = {paddingVertical: spacing[4], paddingHorizontal: spacing[4]}
+
+const VIDEO_PREVIEW: ViewStyle = {height: 256, width: 144, alignSelf: "center", marginTop: 5}
 
 export interface WelcomeScreenProps {
     navigation: NativeStackNavigationProp<ParamListBase>
@@ -51,7 +53,14 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
                 <Text style={TITLE} text="This is the in-app recording demo!"/>
                 <Image source={demoLogo} style={LOGO}/>
                 <Text style={CONTENT}>First we need to capture some video</Text>
-                <Button style={BUTTON} textStyle={BUTTON_TEXT} tx="welcomeScreen.actions.record"/>
+                <Record
+                    previewStyle={VIDEO_PREVIEW}
+                    buttonStyle={BUTTON}
+                    textStyle={BUTTON_TEXT}
+                    tx={"welcomeScreen.actions.record"}
+                    stopTx={"welcomeScreen.actions.stopRecording"}
+                    processingTx={"welcomeScreen.actions.processing"}
+                />
             </Screen>
             <SafeAreaView style={FOOTER}>
                 <View style={FOOTER_CONTENT}>
