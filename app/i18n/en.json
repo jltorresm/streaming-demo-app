@@ -8,20 +8,15 @@
     "invalidEmail": "Invalid email address."
   },
   "welcomeScreen": {
-    "poweredBy": "POWERED BY BOWSER",
-    "readyForLaunch": "Ready for launch.",
-    "continue": "CONTINUE"
+    "poweredBy": "a j2e demo",
+    "actions": {
+      "videoList": "see video list",
+      "record": "record a video"
+    }
   },
-  "demoScreen": {
-    "howTo": "HOW TO",
-    "title": "What’s In This Stack?",
-    "tagLine": "Congratulations, you’ve got a very advanced React Native app template here.  Take advantage of this boilerplate!",
-    "reactotron": "Demo Reactotron",
-    "androidReactotronHint": "If this doesn't work, ensure the Reactotron desktop app is running, run adb reverse tcp:9090 tcp:9090 from your terminal, and reload the app.",
-    "iosReactotronHint": "If this doesn't work, ensure the Reactotron desktop app is running and reload app."
-  },
-  "storybook": {
-    "placeholder": "Placeholder",
-    "field": "Field"
+  "videoListScreen": {
+    "poweredBy": "a j2e demo",
+    "title": "These are the videos you recorded",
+    "tagLine": "Click on a video to reproduce it."
   }
 }
