@@ -36,9 +36,15 @@ export function Record(props: RecordProps) {
         isRecording(false)
         isProcessing(true)
 
-        console.log(uri, codec)
-
-        // Do things here
+        // Send the video to our API
+        const type = "video/" + codec.toString()
+        const data = new FormData();
+        data.append("video", {name: "mobile-video-upload", type, uri});
+        try {
+            await fetch("http://192.168.100.93:10000/upload.php", {method: "post", body: data});
+        } catch (e) {
+            console.log("===ERROR===", e);
+        }
 
         isProcessing(false)
     }
