@@ -39,7 +39,7 @@ export function Record(props: RecordProps) {
         // Send the video to our API
         const type = "video/" + codec.toString()
         const data = new FormData();
-        data.append("video", {name: "mobile-video-upload", type, uri});
+        data.append("video", {name: "mobile_video_upload", type, uri});
         try {
             await fetch("http://192.168.100.93:10000/upload.php", {method: "post", body: data});
         } catch (e) {
@@ -79,7 +79,7 @@ export function Record(props: RecordProps) {
                 }}
                 style={viewStyle}
                 type={RNCamera.Constants.Type.front}
-                flashMode={RNCamera.Constants.FlashMode.on}
+                captureAudio={false}
             />
         </View>
     )

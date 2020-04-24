@@ -2,6 +2,7 @@ import * as React from "react"
 import {Image, ImageStyle, SafeAreaView, TextStyle, View, ViewStyle} from "react-native"
 import {ParamListBase} from "@react-navigation/native"
 import {NativeStackNavigationProp} from "react-native-screens/native-stack"
+import Video from 'react-native-video';
 import {BulletItem, Header, Text, Screen, Wallpaper, Button} from "../../components"
 import {color, spacing} from "../../theme"
 
@@ -55,19 +56,108 @@ const BUTTON_TEXT: TextStyle = {
     letterSpacing: 2,
     textTransform: "uppercase",
 }
+const PLAYER: TextStyle = {height: 256, width: 144, alignSelf: "center", marginTop: 5}
 
-export interface DemoScreenProps {
+export interface VideoListScreenProps {
     navigation: NativeStackNavigationProp<ParamListBase>
 }
 
-export const VideoListScreen: React.FunctionComponent<DemoScreenProps> = props => {
+export const VideoListScreen: React.FunctionComponent<VideoListScreenProps> = props => {
     const goBack = React.useMemo(() => () => props.navigation.goBack(), [props.navigation])
-    let recorded = ["", "", "", ""];
 
-    let videos = recorded.map((item, idx) => {
-        const key = "video #" + idx
-        return <BulletItem key={key} text={key}/>
-    })
+    const [videos, setVideos] = React.useState([]);
+    const [loading, isLoading] = React.useState(false);
+    const [videoToPlay, setVideoToPlay] = React.useState("");
+    const [videoLoadingMessage, setVideoLoadingMessage] = React.useState("");
+
+
+    React.useEffect(() => {
+        async function loadVideos() {
+            isLoading(true)
+
+            // Get the list form the api
+            try {
+                let response = await fetch("http://192.168.100.93:10000/videos.php", {method: "get"});
+
+                if (!response.ok) {
+                    throw new Error("API error");
+                }
+
+                let json = await response.json();
+
+                // Set what came form the server to our internal state
+                setVideos(json)
+            } catch (e) {
+                console.log("===ERROR===", e);
+            }
+
+            isLoading(false)
+        }
+
+        loadVideos()
+    }, []);
+
+    /**
+     * If it is still loading then just cut short the execution
+     */
+    if (loading) {
+        return (
+            <View style={FULL}>
+                <Wallpaper/>
+                <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
+                    <Header headerTx="videoListScreen.poweredBy"
+                            leftIcon="back"
+                            onLeftPress={goBack}
+                            style={HEADER}
+                            titleStyle={HEADER_TITLE}
+                    />
+                    <Text style={TITLE} preset="header" text="Loading..."/>
+                </Screen>
+            </View>
+        );
+    }
+
+    let videoItems = videos
+        .sort((a, b) => {
+            return a.id > b.id ? 1 : -1;
+        })
+        .map((v, idx) => {
+            return (
+                <BulletItem key={v.id + v.name} text={idx + " " + v.name} onPress={() => {
+                    play(v.uri)
+                }}/>
+            )
+        })
+
+    function play(videoUri) {
+        setVideoToPlay(videoUri)
+    }
+
+    function onVideoError() {
+        console.log("video error", arguments)
+    }
+
+    function onVideoLoadStart() {
+        setVideoLoadingMessage("Buffering video...")
+    }
+
+    function onVideoLoad() {
+        setVideoLoadingMessage("")
+    }
+
+    let videoPlayer
+    if (videoToPlay != "") {
+        videoPlayer = (
+            <Video source={{uri: videoToPlay}}
+                   controls={false}
+                   onError={onVideoError}
+                   onLoadStart={onVideoLoadStart}
+                   onLoad={onVideoLoad}
+                   style={PLAYER}
+                   resizeMode="contain"
+            />
+        )
+    }
 
     return (
         <View style={FULL}>
@@ -81,7 +171,9 @@ export const VideoListScreen: React.FunctionComponent<DemoScreenProps> = props =
                 />
                 <Text style={TITLE} preset="header" tx="videoListScreen.title"/>
                 <Text style={TAGLINE} tx="videoListScreen.tagLine"/>
-                {videos}
+                {videoItems}
+                {videoPlayer}
+                <Text style={TAGLINE} text={videoLoadingMessage}/>
             </Screen>
             <SafeAreaView>
                 <Button style={BUTTON} textStyle={BUTTON_TEXT} tx="common.back" onPress={goBack}/>
