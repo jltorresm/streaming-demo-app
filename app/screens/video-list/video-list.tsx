@@ -6,6 +6,8 @@ import Video from 'react-native-video';
 import {BulletItem, Header, Text, Screen, Wallpaper, Button} from "../../components"
 import {color, spacing} from "../../theme"
 
+const {API_URL} = require("../../config/env");
+
 export const heart = require("./heart.png")
 
 const FULL: ViewStyle = {flex: 1}
@@ -70,14 +72,13 @@ export const VideoListScreen: React.FunctionComponent<VideoListScreenProps> = pr
     const [videoToPlay, setVideoToPlay] = React.useState("");
     const [videoLoadingMessage, setVideoLoadingMessage] = React.useState("");
 
-
     React.useEffect(() => {
         async function loadVideos() {
             isLoading(true)
 
             // Get the list form the api
             try {
-                let response = await fetch("http://192.168.100.93:10000/videos.php", {method: "get"});
+                let response = await fetch(API_URL + "/video", {method: "get"});
 
                 if (!response.ok) {
                     throw new Error("API error");

@@ -6,6 +6,8 @@ import {RecordProps} from "./record.props"
 import {flatten, mergeAll} from "ramda";
 import {previewPresets} from "./record.presets";
 
+const { API_URL } = require("../../config/env");
+
 export function Record(props: RecordProps) {
     // grab the props
     const {
@@ -41,7 +43,7 @@ export function Record(props: RecordProps) {
         const data = new FormData();
         data.append("video", {name: "mobile_video_upload", type, uri});
         try {
-            await fetch("http://192.168.100.93:10000/upload.php", {method: "post", body: data});
+            await fetch( API_URL + "/video", {method: "post", body: data});
         } catch (e) {
             console.log("===ERROR===", e);
         }
@@ -79,7 +81,7 @@ export function Record(props: RecordProps) {
                 }}
                 style={viewStyle}
                 type={RNCamera.Constants.Type.front}
-                captureAudio={false}
+                captureAudio={true}
             />
         </View>
     )
