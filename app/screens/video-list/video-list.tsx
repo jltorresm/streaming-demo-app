@@ -5,6 +5,7 @@ import {NativeStackNavigationProp} from "react-native-screens/native-stack"
 import Video from 'react-native-video';
 import {BulletItem, Header, Text, Screen, Wallpaper, Button} from "../../components"
 import {color, spacing} from "../../theme"
+import moment from 'moment';
 
 const {API_URL} = require("../../config/env");
 
@@ -120,11 +121,12 @@ export const VideoListScreen: React.FunctionComponent<VideoListScreenProps> = pr
 
     let videoItems = videos
         .sort((a, b) => {
-            return a.id > b.id ? 1 : -1;
+            return a.created_dt > b.created_dt ? 1 : -1;
         })
-        .map((v, idx) => {
+        .map((v) => {
+            const text = v.name + " (" + moment(v.created_dt).format("h:mm a MMM D, YYYY") + ")";
             return (
-                <BulletItem key={v.id + v.name} text={idx + " " + v.name} onPress={() => {
+                <BulletItem key={v.uuid} text={text} onPress={() => {
                     play(v.uri)
                 }}/>
             )
