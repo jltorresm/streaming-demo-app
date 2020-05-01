@@ -20,7 +20,7 @@ const HEADER_TITLE: TextStyle = {
     letterSpacing: 1.5,
 }
 const TITLE: TextStyle = {...TEXT, ...BOLD, fontSize: 28, lineHeight: 38, textAlign: "center"}
-const LOGO: ImageStyle = {alignSelf: "center", maxHeight: 150, resizeMode: "contain"}
+const LOGO: ImageStyle = {alignSelf: "center", maxHeight: 140, resizeMode: "contain"}
 const CONTENT: TextStyle = {
     ...TEXT,
     color: "#BAB6C8",
@@ -50,7 +50,7 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
             <Wallpaper/>
             <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
                 <Header headerTx="welcomeScreen.poweredBy" style={HEADER} titleStyle={HEADER_TITLE}/>
-                <Text style={TITLE} text="This is the in-app recording demo!"/>
+                <Text style={TITLE} text="This is the recording demo!"/>
                 <Image source={demoLogo} style={LOGO}/>
                 <Text style={CONTENT}>First we need to capture some video</Text>
                 <Record
