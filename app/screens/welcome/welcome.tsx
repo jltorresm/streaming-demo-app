@@ -1,11 +1,9 @@
 import * as React from "react"
-import {View, Image, ViewStyle, TextStyle, ImageStyle, SafeAreaView} from "react-native"
+import {View, ViewStyle, TextStyle, SafeAreaView} from "react-native"
 import {ParamListBase} from "@react-navigation/native"
 import {NativeStackNavigationProp} from "react-native-screens/native-stack"
 import {Button, Header, Screen, Text, Wallpaper, Record} from "../../components"
 import {color, spacing} from "../../theme"
-
-const demoLogo = require("./awesome.png")
 
 const FULL: ViewStyle = {flex: 1}
 const CONTAINER: ViewStyle = {backgroundColor: color.transparent, paddingHorizontal: spacing[4]}
@@ -20,7 +18,6 @@ const HEADER_TITLE: TextStyle = {
     letterSpacing: 1.5,
 }
 const TITLE: TextStyle = {...TEXT, ...BOLD, fontSize: 28, lineHeight: 38, textAlign: "center"}
-const LOGO: ImageStyle = {alignSelf: "center", maxHeight: 140, resizeMode: "contain"}
 const CONTENT: TextStyle = {
     ...TEXT,
     color: "#BAB6C8",
@@ -44,14 +41,12 @@ export const WelcomeScreen: React.FunctionComponent<WelcomeScreenProps> = props 
     const nextScreen = React.useMemo(() => () => props.navigation.navigate("videoList"), [
         props.navigation,
     ])
-
     return (
         <View style={FULL}>
             <Wallpaper/>
             <Screen style={CONTAINER} preset="scroll" backgroundColor={color.transparent}>
                 <Header headerTx="welcomeScreen.poweredBy" style={HEADER} titleStyle={HEADER_TITLE}/>
                 <Text style={TITLE} text="This is the recording demo!"/>
-                <Image source={demoLogo} style={LOGO}/>
                 <Text style={CONTENT}>First we need to capture some video</Text>
                 <Record
                     previewStyle={VIDEO_PREVIEW}
