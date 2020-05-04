@@ -50,7 +50,7 @@ export function Record(props: RecordProps) {
             //
             // Get the pre-signed url from our API server to upload the video to the storage server (S3).
             //
-            let preSignedPostObjectResponse = await fetch(API_URL + "/upload", {method: "get"});
+            let preSignedPostObjectResponse = await fetch(API_URL + "/upload", {method: "GET"});
             if (!preSignedPostObjectResponse.ok) {
                 throw new Error("API error");
             }
@@ -91,13 +91,20 @@ export function Record(props: RecordProps) {
             //
             // Now sent the metadata to our API.
             //
-            // await fetch(API_URL + "/video", {method: "post", body: data});
+            console.log("Saving metadata to API...\n\tVideo with UUID:" + videoUUID)
+            let metadata = {name: videoName, uuid: videoUUID, type: type};
+            await fetch(API_URL + "/upload", {
+                method: "PUT",
+                body: JSON.stringify(metadata),
+                headers: {"Content-Type": "application/json"},
+            });
+            console.log("Successfully saved metadata...");
         } catch (e) {
             console.log("===ERROR===", e);
         }
 
         setVideoName("");
-        isProcessing(false)
+        isProcessing(false);
     }
 
     function stopRecording() {
