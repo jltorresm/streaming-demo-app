@@ -95,8 +95,10 @@ export function Record(props: RecordProps) {
             />
             <View style={CONTROLS_STYLE}>
                 <Button style={CONTROL_STYLE} textStyle={textStyleOverride} text={"Toggle Camera"}
+                        disabled={recording || processing}
                         onPress={() => isFrontCamera(!frontCamera)}/>
                 <Button style={CONTROL_STYLE} textStyle={textStyleOverride}
+                        disabled={recording || processing}
                         text={audioEnabled ? "Disable Audio" : "Enable Audio"}
                         onPress={() => isAudioEnabled(!audioEnabled)}/>
             </View>

@@ -5,6 +5,7 @@ import {NativeStackNavigationProp} from "react-native-screens/native-stack"
 import Video from 'react-native-video';
 import {BulletItem, Header, Text, Screen, Wallpaper, Button} from "../../components"
 import {color, spacing} from "../../theme"
+// @ts-ignore
 import moment from 'moment';
 
 const {API_URL} = require("../../config/env");
