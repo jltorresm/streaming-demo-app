@@ -138,6 +138,7 @@ android {
             abiFilters "armeabi-v7a", "x86"
         }
         missingDimensionStrategy 'react-native-camera', 'general'
+        multiDexEnabled true
     }
     splits {
         abi {

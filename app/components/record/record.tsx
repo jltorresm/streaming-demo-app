@@ -6,6 +6,8 @@ import {RecordProps} from "./record.props"
 import {flatten, mergeAll} from "ramda";
 import {previewPresets} from "./record.presets";
 import {color, spacing} from "../../theme";
+import 'react-native-get-random-values';
+import {v4 as uuidv4} from 'uuid';
 
 const {API_URL} = require("../../config/env");
 
@@ -39,17 +41,57 @@ export function Record(props: RecordProps) {
     async function startRecording() {
         isRecording(true)
 
-        // default to mp4 for android as codec is not set
+        // Default to mp4 for android as codec is not set.
         const {uri, codec = "mp4"} = await camera.current.recordAsync();
         isRecording(false)
         isProcessing(true)
 
-        // Send the video to our API
-        const type = "video/" + codec.toString()
-        const data = new FormData();
-        data.append("video", {name: videoName, type, uri});
         try {
-            await fetch(API_URL + "/video", {method: "post", body: data});
+            //
+            // Get the pre-signed url from our API server to upload the video to the storage server (S3).
+            //
+            let preSignedPostObjectResponse = await fetch(API_URL + "/upload", {method: "get"});
+            if (!preSignedPostObjectResponse.ok) {
+                throw new Error("API error");
+            }
+            let preSignedPostObject = await preSignedPostObjectResponse.json();
+
+            //
+            // Fill-in the fields that come from the pre-built post object.
+            //
+            const data = new FormData();
+            Object.keys(preSignedPostObject.formInputs).forEach(key => {
+                const value = preSignedPostObject.formInputs[key]
+                data.append(key, value);
+            });
+
+            //
+            // Prepare the video to be sent over to the storage server and do the upload.
+            //
+            const type = "video/" + codec.toString()
+            const videoUUID = uuidv4();
+            const filename = videoUUID + "." + codec.toString();
+            data.append("file", {name: filename, type, uri});
+            const attributes = {
+                method: preSignedPostObject.formAttributes.method,
+                body: data,
+                headers: {
+                    'Content-Type': preSignedPostObject.formAttributes.enctype,
+                },
+            };
+
+            console.log("Starting upload...\n\tVideo with UUID:" + videoUUID)
+            let uploadResponse = await fetch(preSignedPostObject.formAttributes.action, attributes);
+            if (!uploadResponse.ok) {
+                console.log(await uploadResponse.text());
+                throw new Error("API error");
+            }
+            console.log("Successfully uploaded...")
+
+            //
+            // Now sent the metadata to our API.
+            //
+            // await fetch(API_URL + "/video", {method: "post", body: data});
         } catch (e) {
             console.log("===ERROR===", e);
         }
