@@ -27,13 +27,15 @@ const BULLET_TEXT: TextStyle = {
 }
 
 export interface BulletItemProps extends TouchableOpacityProps {
-    text: string
+    text: string,
+    children?: React.ReactNode,
 }
 
 export function BulletItem(props: BulletItemProps) {
     return (
-        <TouchableOpacity activeOpacity={1} onPress={props.onPress} style={BULLET_ITEM}>
+        <TouchableOpacity disabled={props.disabled} activeOpacity={1} onPress={props.onPress} style={BULLET_ITEM}>
             <Icon icon="bullet" containerStyle={BULLET_CONTAINER} style={BULLET}/>
+            {props.children}
             <Text style={BULLET_TEXT} text={props.text}/>
         </TouchableOpacity>
     )

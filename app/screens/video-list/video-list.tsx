@@ -126,10 +126,18 @@ export const VideoListScreen: React.FunctionComponent<VideoListScreenProps> = pr
         })
         .map((v) => {
             const text = v.name + " (" + moment(v.created_dt).format("h:mm a MMM D, YYYY") + ")";
+
+            let processing;
+            if (v.processed == 0) {
+                processing = <Text>Processing </Text>
+            }
+
             return (
-                <BulletItem key={v.uuid} text={text} onPress={() => {
+                <BulletItem disabled={v.processed == 0} key={v.uuid} text={text} onPress={() => {
                     play(v.uri)
-                }}/>
+                }}>
+                    {processing}
+                </BulletItem>
             )
         })
 

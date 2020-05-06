@@ -28,7 +28,8 @@ export function Record(props: RecordProps) {
     const VIEW_STYLE = mergeAll(flatten([previewPresets[preset] || previewPresets.fullscreen, previewStyleOverride]))
     const CONTROLS_STYLE: ViewStyle = {marginTop: spacing[4], flexDirection: "row", justifyContent: "space-evenly"};
     const controlBase: ViewStyle = {backgroundColor: color.palette.lightGrey, borderRadius: 50};
-    const CONTROL_STYLE: ViewStyle = mergeAll(flatten([buttonStyleOverride, controlBase]));
+    const CONTROL_STYLE: ViewStyle = mergeAll(flatten([controlBase, buttonStyleOverride]));
+    const DISABLED_CONTROL_STYLE: ViewStyle = mergeAll(flatten([buttonStyleOverride, {opacity: 0.2}]));
 
     // Prepare the necessary actions to manage the camera
     const [recording, isRecording] = React.useState(false);
@@ -128,6 +129,7 @@ export function Record(props: RecordProps) {
         );
     }
 
+    const disableControls = recording || processing;
     return (
         <View>
             <TextField
@@ -143,11 +145,13 @@ export function Record(props: RecordProps) {
                 captureAudio={audioEnabled}
             />
             <View style={CONTROLS_STYLE}>
-                <Button style={CONTROL_STYLE} textStyle={textStyleOverride} text={"Toggle Camera"}
-                        disabled={recording || processing}
+                <Button style={disableControls ? DISABLED_CONTROL_STYLE : CONTROL_STYLE}
+                        textStyle={textStyleOverride} text={"Toggle Camera"}
+                        disabled={disableControls}
                         onPress={() => isFrontCamera(!frontCamera)}/>
-                <Button style={CONTROL_STYLE} textStyle={textStyleOverride}
-                        disabled={recording || processing}
+                <Button style={disableControls ? DISABLED_CONTROL_STYLE : CONTROL_STYLE}
+                        textStyle={textStyleOverride}
+                        disabled={disableControls}
                         text={audioEnabled ? "Disable Audio" : "Enable Audio"}
                         onPress={() => isAudioEnabled(!audioEnabled)}/>
             </View>
