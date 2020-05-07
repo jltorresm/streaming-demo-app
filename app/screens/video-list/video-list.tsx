@@ -61,6 +61,7 @@ const BUTTON_TEXT: TextStyle = {
     textTransform: "uppercase",
 }
 const PLAYER: TextStyle = {height: 256, width: 144, alignSelf: "center", marginTop: 5}
+const ERROR: TextStyle = {color: color.palette.angry, fontWeight: "bold", textTransform: "uppercase"}
 
 export interface VideoListScreenProps {
     navigation: NativeStackNavigationProp<ParamListBase>
@@ -127,16 +128,18 @@ export const VideoListScreen: React.FunctionComponent<VideoListScreenProps> = pr
         .map((v) => {
             const text = v.name + " (" + moment(v.created_dt).format("h:mm a MMM D, YYYY") + ")";
 
-            let processing;
-            if (v.processed == 0) {
-                processing = <Text>Processing </Text>
+            let prefix;
+            if (v.error == 1) {
+                prefix = <Text style={ERROR}>Error </Text>
+            } else if (v.processed == 0) {
+                prefix = <Text>Processing </Text>
             }
 
             return (
                 <BulletItem disabled={v.processed == 0} key={v.uuid} text={text} onPress={() => {
                     play(v.uri)
                 }}>
-                    {processing}
+                    {prefix}
                 </BulletItem>
             )
         })
