@@ -1,5 +1,4 @@
-# Camera Demo
-
+# Streaming Demo App
 A quick, not very clean, demo about how to record video in a react native application. 
 
 This repo goes paired with the [streaming-demo-api](https://github.com/jltorresm/streaming-demo-api), which handles
